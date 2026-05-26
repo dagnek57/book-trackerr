@@ -14,6 +14,33 @@ def save_books(books):
     with open(BOOKS_FILE, "w", encoding="utf-8") as f:
         json.dump(books, f, ensure_ascii=False, indent=4)
 
+def show_all_books(books):
+    if not books:
+        print("Список книг пуст.")
+        return
+    print("\nСписок книг:")
+    for i, book in enumerate(books, 1):
+        print(f"{i}. {book['author']} - {book['title']} (оценка: {book['rating']}, прочитана: {book['date_read']})")
+
+def average_rating(books):
+    if not books:
+        print("Нет книг для расчёта средней оценки.")
+        return
+    avg = sum(book['rating'] for book in books) / len(books)
+    print(f"\nСредняя оценка: {avg:.2f}")
+
+def author_stats(books):
+    if not books:
+        print("Нет книг для статистики.")
+        return
+    stats = {}
+    for book in books:
+        author = book['author']
+        stats[author] = stats.get(author, 0) + 1
+    print("\nСтатистика по авторам:")
+    for author, count in stats.items():
+        print(f"{author}: {count} книг(а)")
+
 def show_menu():
     print("\nМеню:")
     print("1. Добавить книгу")
@@ -30,11 +57,17 @@ def main():
         if choice == "1":
             pass  # позже добавим вызов add_book()
         elif choice == "2":
-            pass
+            elif choice == "2":
+            books = load_books()
+            show_all_books(books)
         elif choice == "3":
-            pass
+            elif choice == "3":
+            books = load_books()
+            average_rating(books)
         elif choice == "4":
-            pass
+            elif choice == "4":
+            books = load_books()
+            author_stats(books)
         elif choice == "5":
             pass
         elif choice == "6":
