@@ -14,6 +14,45 @@ def save_books(books):
     with open(BOOKS_FILE, "w", encoding="utf-8") as f:
         json.dump(books, f, ensure_ascii=False, indent=4)
 
+def add_book(books):
+    print("\nДобавление новой книги")
+    author = input("Автор: ").strip()
+    title = input("Название: ").strip()
+
+    # Проверка на дубликат (пока простая, потом усилим)
+    for book in books:
+        if book["author"].lower() == author.lower() and book["title"].lower() == title.lower():
+            print("Такая книга уже есть в списке!")
+            return books
+
+    while True:
+        try:
+            rating = int(input("Оценка (1-5): "))
+            if 1 <= rating <= 5:
+                break
+            else:
+                print("Оценка должна быть от 1 до 5")
+        except ValueError:
+            print("Введите целое число")
+
+    date_str = input("Дата прочтения (ГГГГ-ММ-ДД): ").strip()
+    try:
+        datetime.strptime(date_str, "%Y-%m-%d")
+    except ValueError:
+        print("Неверный формат даты. Используйте ГГГГ-ММ-ДД")
+        return books
+
+    book = {
+        "author": author,
+        "title": title,
+        "rating": rating,
+        "date_read": date_str
+    }
+    books.append(book)
+    save_books(books)
+    print("Книга добавлена!")
+    return books
+
 def show_menu():
     print("\nМеню:")
     print("1. Добавить книгу")
@@ -28,7 +67,8 @@ def main():
         show_menu()
         choice = input("Выберите действие: ")
         if choice == "1":
-            pass  # позже добавим вызов add_book()
+            books = load_books()
+            books = add_book(books)  # позже добавим вызов add_book()
         elif choice == "2":
             pass
         elif choice == "3":
